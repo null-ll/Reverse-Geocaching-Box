@@ -1,0 +1,49 @@
+<!DOCTYPE html><html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title> Reverse Geocache Box </title>
+</head>
+<body>
+    <h1>Reverse Geocaching Box</h1>
+    <div class="dashboard">
+        <div class="dash-item">
+            <h2>Current Configuration</h2>
+            <table>
+                <tr>
+                    <th>Target Latitude</th>
+                    <td>%target_lat%</td>
+                </tr>
+                <tr>
+                    <th>Target Longitude</th>
+                    <td>%target_lng%</td>
+                </tr>
+                <tr>
+                    <th>Target Range</th>
+                    <td>%target_range%</td>
+                </tr>
+            </table>
+        </div>
+        <div class="dash-item">
+            <h2>Change Target Coordinates</h2>
+            <p>Enter the coordinates of the new target location.</p>
+            <form action= "/get">
+                <label for="target_lat">Latitude</label><br>
+                <input type="number" step="any" min="-180" max="180" name="target_lat" placeholder="%target_lat%"/><br>
+                <label for="target_lng">Longitude</label><br>
+                <input type="number" step="any" min="-180" max="180" name="target_lng" placeholder="%target_lng%"/><br>
+                <input type="submit" value="Change Coordinates">
+            </form>
+        </div>
+        <div class="dash-item">
+            <h2>Change Unlock Range</h2>
+            <p>Enter the range in meters from the target to unlock the box.</p>
+            <form action= "/get">
+                <label for="target_range">Range</label><br>
+                <input type="number" step="any" name="target_range" placeholder="%target_range%"/><br>
+                <input type="submit" value="Change Range">
+            </form>
+        </div>
+    </div>
+</body>
+</html>
