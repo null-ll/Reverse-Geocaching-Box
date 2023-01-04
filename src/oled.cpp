@@ -5,11 +5,11 @@
 #include <Adafruit_SSD1306.h>
 #include <Wire.h>
 
-Adafruit_SSD1306 oled(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+Adafruit_SSD1306 oled(OLED_WIDTH, OLED_HEIGHT, &Wire, -1);
 const int charWidth = 5, charHeight = 7;
 
 int centerAlign(int length) {
-    return (SCREEN_WIDTH - charWidth * length) / 2;
+    return (OLED_WIDTH - charWidth * length) / 2;
 }
 
 void oledInit() {
@@ -43,7 +43,7 @@ void oledDisplayDistance(const double dist) {
     oled.setCursor(15, 25);
     oled.print("DIST: ");
     oled.setCursor(50, 25);
-    oled.print(dist, 1);
+    oled.print(dist, ROUND_DIST);
     oled.print("m");
     oled.display();
 }
@@ -63,14 +63,13 @@ void oledNoData() {
     oled.display();
 }
 
-void oledDisplayWiFi(IPAddress ip, bool connected) {
+void oledDisplayWiFi(const char *ip, bool connected) {
     oled.clearDisplay();
     String msg = "Connection avail";
     oled.setCursor(centerAlign(msg.length()), 10);
     oled.print(msg);
-    msg = ip.toString();
-    oled.setCursor(centerAlign(msg.length()), 20);
-    oled.print(msg);
+    oled.setCursor(centerAlign(strlen(ip)), 20);
+    oled.print(ip);
     oled.display();
 }
 

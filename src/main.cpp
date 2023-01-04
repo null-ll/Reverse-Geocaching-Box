@@ -18,14 +18,12 @@ void printData();
 void printNoData();
 double distFromTgt(double currLat, double currLng);
 
-int buttonState = 0;
-bool targetReached = false;
-bool wifiConnected = false;
-
 TinyGPSPlus gps;
 HardwareSerial gpsSerial(2);
 Servo servo;
 OneButton button(BUTTON_PIN, false, false);
+
+bool wifiConnected = false;
 
 double targetLat;
 double targetLng;
@@ -33,7 +31,6 @@ double targetRange;
 
 void setup() {
     lock();
-    Serial.begin(9600);
     gpsSerial.begin(GPS_BAUD, SERIAL_8N1, GPS_RX_PIN, GPS_TX_PIN);
     oledInit();
 
@@ -42,15 +39,12 @@ void setup() {
     button.attachDuringLongPress(displayInfo);
     button.attachLongPressStop(displaySleep);
 
+    // Get initial values from nvs
     nvsBegin();
     targetLat = nvsGetTargetLat(DEFAULT_TARGET_LAT);
     targetLng = nvsGetTargetLng(DEFAULT_TARGET_LNG);
     targetRange = nvsGetTargetRange(DEFAULT_TARGET_RANGE);
     nvsEnd();
-
-    Serial.printf("Lat: %f\n", targetLat);
-    Serial.printf("Long: %f\n", targetLng);
-    Serial.printf("Range: %f\n", targetRange);
 }
 
 void loop() {
@@ -74,10 +68,12 @@ void toggleServer() {
  * Display location and distance from target, if available. 
  */
 void displayInfo() {
+    // Do not display location when connected
     if(wifiConnected) {
         return;
     }
     bool avail = false;
+    // Check if valid gps location is available.
     while (gpsSerial.available() > 0) {
         if (gps.encode(gpsSerial.read())) {
             if (gps.location.isValid()) {
@@ -93,7 +89,7 @@ void displayInfo() {
 }
 
 /**
- * Turns display off after a delay.
+ * Turns display off.
  */
 void displaySleep() {
     if(wifiConnected) {
@@ -147,7 +143,8 @@ void printNoData() {
 }
 
 /**
-   * Haversine formula - https://en.wikipedia.org/wiki/Haversine_formula
+ * Calculate distance from target location.
+ * Haversine formula - https://en.wikipedia.org/wiki/Haversine_formula
 */
 double distFromTgt(double currLat, double currLng) {
     double lat1 = radians(currLat);
